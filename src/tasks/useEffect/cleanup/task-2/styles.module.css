@@ -1,0 +1,4 @@
+.root { padding: 8px; border: 1px dashed #cbd5e1; border-radius: 8px; }
+.title { font-weight: 700; }
+.btn { padding: 4px 10px; border: 1px solid #64748b; border-radius: 6px; cursor: pointer; }
+
