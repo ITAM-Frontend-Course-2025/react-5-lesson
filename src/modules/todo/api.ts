@@ -2,22 +2,12 @@ import axios from "axios"
 import { Base_Url } from "../../shared/config/constants";
 
 export const TodosApi = {
-    // Получение массива todos 
     getAll: () => 
-        axios.get(`${Base_Url}/todos`).then((resp) => {
-            const allTodos = resp.data;
-            return allTodos
-        }),
-
-    // Получение todo по ID 
+        axios.get(`${Base_Url}/todos`).then((resp) => resp.data),
     getById: (id:number) => 
-        axios.get(`${Base_Url}/${id}`).then((resp) => {
-            const todoById = resp.data;
-            return todoById
-        }),
+        axios.get(`${Base_Url}/${id}`).then((resp) => resp.data),
     postNew: (todoData: {text:string, completed: boolean}) =>
-        axios.post(`${Base_Url}/todos`, todoData ).then((resp) => {
-            const newTodo = resp.data
-            return newTodo
-        })
+        axios.post(`${Base_Url}/todos`, todoData ).then((resp) => resp.data),
+    delete: (id: number) => 
+        axios.delete(`${Base_Url}/todos/${id}`).then((resp) => resp.data)
 }

@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import type { Todo } from "../../modules/todo/model";
 import { TodosApi } from "../../modules/todo";
 import styles from "./todo-details-page.module.css";
+import  binSrc  from '/bin.svg'
+import  editSrc  from '/edit.svg'
 
 export const TodoDetailsPage = () => {
 	const { id } = useParams<{ id: string }>();
@@ -11,6 +13,8 @@ export const TodoDetailsPage = () => {
 	const [todoById, setTodoById] = useState<Todo>();
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		if (!isValidId){
@@ -34,6 +38,22 @@ export const TodoDetailsPage = () => {
 
 	const badgeClassName = [styles.badge, todoById?.completed && styles.badgeSuccess].filter(Boolean).join(" ");
 
+	const handleDeleteClick = async() => {
+		if (!todoById) return
+		if(!confirm("Вы действительно хотите удалить задачу?")) return
+		try{
+			setIsDeleting(true)
+			setError(null)
+			await TodosApi.delete(todoId)
+			navigate('/todos')
+		}
+		catch(error){
+			setError("Не удалось удалить задачу")
+		}
+		finally{
+			setIsDeleting(false)
+		}
+	}
 	if (isLoading){
 		return (
 		<div className={styles.page}>
@@ -60,7 +80,7 @@ export const TodoDetailsPage = () => {
 						← Вернуться к списку
 					</Link>
 				</header>
-				<div>Упс... Не удалось загрузить данные о задаче</div>
+				<div>Упс... {error}</div>
 			</div>
 		)
 	}
@@ -86,9 +106,15 @@ export const TodoDetailsPage = () => {
 
 			{todoById && (
 				<article className={styles.details}>
-					<div className={styles.detailsStatus}>
-						<span className={badgeClassName}>{todoById.completed ? "Готово" : "В работе"}</span>
-						<span>ID: {todoById.id}</span>
+					<div className={styles.top}>
+						<div className={styles.detailsStatus}>
+							<span className={badgeClassName}>{todoById.completed ? "Готово" : "В работе"}</span>
+							<span>ID: {todoById.id}</span>
+						</div>
+						<div className={styles.icons}>
+							<button><img src={editSrc} alt="Edit" /></button>
+							<button onClick={handleDeleteClick} disabled={isDeleting}><img src={binSrc} alt="Bin" /></button>
+						</div>
 					</div>
 					<h3>{todoById.text}</h3>
 					<p>Возможно здесь когда-нибудь будет описание задачи.</p>
