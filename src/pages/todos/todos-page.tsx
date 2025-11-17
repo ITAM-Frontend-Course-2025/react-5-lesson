@@ -1,36 +1,43 @@
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Todo } from "../../modules/todo/model";
 import { TodosList } from "../../modules/todo";
+import { CreateTodo } from "../../modules/todo";
+import { TodosApi } from "../../modules/todo";
 import styles from "./todos-page.module.css";
 
-const mockTodos: Todo[] = [
-	{
-		id: 1,
-		text: "Настроить клиент axios",
-		description: "Создадим базовый инстанс и добавим интерсепторы.",
-		completed: false,
-	},
-	{
-		id: 2,
-		text: "Получить список задач",
-		description: "Напишем первый GET запрос и обработаем успешный ответ.",
-		completed: false,
-	},
-	{
-		id: 3,
-		text: "Обновить статус задачи",
-		description: "Разберём PATCH запросы и частичное обновление.",
-		completed: true,
-	},
-];
-
 export const TodosPage = () => {
-	const stats = useMemo(() => {
-		const total = mockTodos.length;
-		const completed = mockTodos.filter((todo) => todo.completed).length;
+	const [allTodos, setAllTodos] = useState<Todo[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-		return { total, completed };
+	useEffect(() => {
+		const fetchTodos = async () => {
+			try {
+				setIsLoading(true);
+				const todos = await TodosApi.getAll();
+				setAllTodos(todos);
+			} catch (err) {
+				setError("Не получилось загрузить задачи");
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchTodos();
 	}, []);
+
+	const handleCreateSuccess = (newTodo: Todo) => {
+		setAllTodos(prev => [...prev, newTodo]); 
+	};
+
+	const stats = useMemo(() => {
+		const total = allTodos.length
+		const completed = allTodos.filter((todo: Todo) => todo.completed).length
+		return { total, completed };
+	}, [allTodos]);
+
+	if (isLoading) return <div>Загрузка...</div>;
+
+	if (error) return <div>{error}</div>;
 
 	return (
 		<div className={styles.page}>
@@ -44,8 +51,8 @@ export const TodosPage = () => {
 					<span>Выполнено: {stats.completed}</span>
 				</div>
 			</header>
-
-			<TodosList items={mockTodos} />
+			<CreateTodo onSuccess={handleCreateSuccess} />
+			<TodosList items={allTodos} />
 		</div>
 	);
 };
