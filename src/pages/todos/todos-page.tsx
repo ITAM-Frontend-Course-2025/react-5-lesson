@@ -1,36 +1,29 @@
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Todo } from "../../modules/todo/model";
 import { TodosList } from "../../modules/todo";
 import styles from "./todos-page.module.css";
-
-const mockTodos: Todo[] = [
-	{
-		id: 1,
-		text: "Настроить клиент axios",
-		description: "Создадим базовый инстанс и добавим интерсепторы.",
-		completed: false,
-	},
-	{
-		id: 2,
-		text: "Получить список задач",
-		description: "Напишем первый GET запрос и обработаем успешный ответ.",
-		completed: false,
-	},
-	{
-		id: 3,
-		text: "Обновить статус задачи",
-		description: "Разберём PATCH запросы и частичное обновление.",
-		completed: true,
-	},
-];
+import axios from "axios";
 
 export const TodosPage = () => {
+	const [todos, setTodos] = useState<Todo[]>([]);
+
+	useEffect(() => {
+		axios.get(`${import.meta.env.VITE_API_URL}/todos`)
+		.then(response => {
+			console.log("Successful request!");
+			setTodos(response.data);
+		})
+		.catch(error => {
+			console.error("Request error: ", error);
+		});
+	}, []);
+
 	const stats = useMemo(() => {
-		const total = mockTodos.length;
-		const completed = mockTodos.filter((todo) => todo.completed).length;
+		const total = todos.length;
+		const completed = todos.filter((todo) => todo.completed).length;
 
 		return { total, completed };
-	}, []);
+	}, [todos]);
 
 	return (
 		<div className={styles.page}>
@@ -45,7 +38,7 @@ export const TodosPage = () => {
 				</div>
 			</header>
 
-			<TodosList items={mockTodos} />
+			<TodosList items={todos} />
 		</div>
 	);
 };
