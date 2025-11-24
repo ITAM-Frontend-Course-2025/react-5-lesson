@@ -15,7 +15,6 @@ export const TodoCard = ({ todo }: TodoCardProps) => {
 				<h3 className={styles.title}>{todo.text}</h3>
 				<span className={badgeClassName}>{todo.completed ? "Готово" : "В работе"}</span>
 			</header>
-			<p className={styles.description}>{todo.description || "Описание появится после получения данных с сервера."}</p>
 			<footer className={styles.meta}>
 				<span className={styles.identifier}>ID: {todo.id}</span>
 				<span>{todo.completed ? "✅ Выполнено" : "🕒 Ожидает выполнения"}</span>

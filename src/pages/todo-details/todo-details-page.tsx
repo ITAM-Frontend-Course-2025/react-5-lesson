@@ -1,27 +1,55 @@
-import { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import type { Todo } from "../../modules/todo/model";
 import styles from "./todo-details-page.module.css";
-
-const createPlaceholderTodo = (id: number): Todo => ({
-	id,
-	text: `Задача #${id}`,
-	description: "Во время занятия заменим эти данные на реальные из API.",
-	completed: id % 2 === 0,
-});
+import axios from "axios";
+import { Modal, Form } from "../../shared/ui";
 
 export const TodoDetailsPage = () => {
 	const { id } = useParams<{ id: string }>();
-	const todoId = Number(id);
-	const isValidId = Number.isInteger(todoId) && todoId > 0;
+	const navigate = useNavigate();
 
-	const todo = useMemo(() => {
-		if (!isValidId) {
-			return null;
-		}
+	const [todo, setTodo] = useState<Todo>();
+	const [modal, setModal] = useState<boolean>(false);
+	
+	useEffect(() => {
+		axios.get(`${import.meta.env.VITE_API_URL}/${id}`)
+		.then(response => {
+			console.log("Successful request!");
+			setTodo(response.data);
+		})
+		.catch(error => {
+			console.error("Request error: ", error);
+		});
+	}, [id]);
 
-		return createPlaceholderTodo(todoId);
-	}, [isValidId, todoId]);
+	const handleStatusChange = () => {
+		axios.patch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {completed: !todo?.completed})
+		.then(response => {
+			console.log("Successful status change!");
+			console.log(response);
+		})
+		.catch(error => {
+			console.error("Status change error", error);
+		});
+
+		location.reload();
+	};
+
+	const handleDeletion = (event: React.MouseEvent<HTMLButtonElement>) => {
+		axios.delete(`${import.meta.env.VITE_API_URL}/todos/${id}`)
+		.then(response => {
+			console.log("Successful deletion!");
+			console.log(response);
+		})
+		.catch(error => {
+			console.error("Deletion error: ", error)
+		})
+
+		navigate("/todos");
+
+		event.preventDefault();
+	}
 
 	const badgeClassName = [styles.badge, todo?.completed && styles.badgeSuccess].filter(Boolean).join(" ");
 
@@ -30,28 +58,51 @@ export const TodoDetailsPage = () => {
 			<header className={styles.header}>
 				<div>
 					<h2>Детали задачи</h2>
-					<p>Позже подключим запрос за конкретной задачей и обработаем его состояния.</p>
 				</div>
 				<Link to="/todos" className={styles.backLink}>
 					← Вернуться к списку
 				</Link>
 			</header>
 
-			{!isValidId && (
-				<div className={styles.stateCard}>
-					<p>Выберите задачу из списка слева, чтобы посмотреть подробности.</p>
-					<p className={styles.stateCardHint}>После подключения API мы загрузим данные по её идентификатору.</p>
-				</div>
-			)}
-
 			{todo && (
 				<article className={styles.details}>
-					<div className={styles.detailsStatus}>
-						<span className={badgeClassName}>{todo.completed ? "Готово" : "В работе"}</span>
-						<span>ID: {todo.id}</span>
+					<div className={styles.todoBar}>
+						<div className={styles.detailsStatus}>
+							<span
+								className={badgeClassName}
+								onClick={handleStatusChange}
+							>
+									{todo.completed ? "Готово" : "В работе"}
+							</span>
+							<span>ID: {todo.id}</span>
+						</div>
+						<div className={styles.buttonGroup}>
+							<button
+								className={styles.buttonEdit}
+								onClick={() => setModal(true)}
+							>
+									Изменить
+							</button>
+							<button
+								className={styles.buttonDelete} 
+								onClick={handleDeletion}
+							>
+									Удалить
+							</button>
+						</div>
 					</div>
-					<h3>{todo.text}</h3>
-					<p>{todo.description}</p>
+					<h3>Задача №{todo.id}</h3>
+					<p>{todo.text}</p>
+
+					<Modal
+						visibility={modal}
+						setVisibility={setModal}
+					>
+						<Form
+							id={id}
+							formType="edit"
+						/>
+					</Modal>
 				</article>
 			)}
 		</div>
