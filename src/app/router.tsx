@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { MainLayout } from "../shared/ui/main-layout";
+import { MainLayout } from "../shared/ui";
 import { TodoDetailsPage } from "../pages/todo-details";
 import { TodosPage } from "../pages/todos";
 

@@ -21,11 +21,6 @@
 	font-size: 28px;
 }
 
-.header p {
-	margin: 6px 0 0;
-	color: rgba(29, 29, 31, 0.6);
-}
-
 .backLink {
 	display: inline-flex;
 	align-items: center;
@@ -35,20 +30,6 @@
 	background: rgba(93, 95, 239, 0.12);
 	color: #5b5dff;
 	font-weight: 600;
-}
-
-.stateCard {
-	padding: 24px;
-	border-radius: 20px;
-	background: white;
-	text-align: center;
-	box-shadow: 0 18px 36px -30px rgba(29, 29, 31, 0.35);
-	color: rgba(29, 29, 31, 0.8);
-}
-
-.stateCardHint {
-	margin-top: 8px;
-	color: rgba(29, 29, 31, 0.6);
 }
 
 .details {
@@ -96,6 +77,7 @@
 	color: #5b5dff;
 	font-weight: 600;
 	font-size: 14px;
+	cursor: pointer;
 }
 
 .badgeSuccess {
@@ -128,7 +110,7 @@
 	transition: all 0.2s ease;
 }
 .buttonEdit:hover {
-	background: rgba(93, 95, 239, 0.12);
+	background-color: rgba(93, 95, 239, 0.12);
 }
 
 .buttonDelete {
