@@ -1,0 +1,65 @@
+.inputs{
+	margin-bottom: 15px;
+}
+.inputs input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	transition: border-color 0.2s ease;
+	margin-bottom: 10px;
+}
+.inputs input[type="text"]:focus {
+	outline: none;
+	border-color: #5b5dff;
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+.inputs input[type="text"]::placeholder {
+ color: #6c757d;
+}
+.inputs label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+}
+.inputs input[type="checkbox"] {
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+	accent-color: #5b5dff;
+}
+.buttons {
+	display: flex;
+	gap: 20px;
+}
+.buttons button {
+	padding: 12px 16px;
+	border-radius: 16px;
+	font-weight: 600;
+	border: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+.buttons button:first-child {
+	background: rgba(93, 95, 239, 0.09);
+	color: #5b5dff;
+}
+.buttons button:first-child:hover:not(:disabled) {
+	background-color: #5b5dff;
+	color: white;
+	transform: translateY(-2px);
+}
+.buttons button:last-child {
+	background: #cd3030cd;
+	color: white;
+}
+.buttons button:last-child:hover:not(:disabled) {
+  background: #d42c2c;
+  transform: translateY(-1px);
+}
+.buttons button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+

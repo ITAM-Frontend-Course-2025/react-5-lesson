@@ -9,5 +9,7 @@ export const TodosApi = {
     postNew: (todoData: {text:string, completed: boolean}) =>
         axios.post(`${Base_Url}/todos`, todoData ).then((resp) => resp.data),
     delete: (id: number) => 
-        axios.delete(`${Base_Url}/todos/${id}`).then((resp) => resp.data)
+        axios.delete(`${Base_Url}/todos/${id}`).then((resp) => resp.data),
+    update: (id: number, todo:{text: string, completed: boolean}) => 
+        axios.patch(`${Base_Url}/todos/${id}`, todo).then((resp) => resp.data)
 }
