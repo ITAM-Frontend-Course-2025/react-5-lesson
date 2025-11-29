@@ -1,0 +1,50 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	padding: 32px;
+	background: rgba(255, 255, 255, 0.92);
+	border-radius: 28px;
+	box-shadow: 0 20px 40px -36px rgba(63, 65, 255, 0.4);
+}
+
+.header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.header h2 {
+	margin: 0;
+	font-size: 28px;
+}
+
+.header p {
+	margin: 6px 0 0;
+	color: rgba(29, 29, 31, 0.6);
+}
+
+.stats {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	border-radius: 16px;
+	background: rgba(93, 95, 239, 0.09);
+	color: #5b5dff;
+	font-weight: 600;
+}
+
+.stats span:last-child {
+	color: #1d1d1f;
+}
+
+@media (max-width: 768px) {
+	.page {
+		padding: 24px;
+	}
+}
+
+
